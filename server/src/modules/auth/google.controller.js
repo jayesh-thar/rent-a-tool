@@ -53,10 +53,11 @@ async function handleGoogleCallback(req, res) {
     const refreshToken = generateRefreshToken(user);
 
     // Set refresh token as httpOnly cookie (same as local login).
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });

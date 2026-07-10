@@ -168,20 +168,22 @@ async function updateProfile(req, res, next) {
 // secure: true in production (HTTPS), sameSite: 'lax' prevents CSRF on cross-site requests.
 // Rotated correctly in dev.
 function setRefreshCookie(res, token) {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
     path: '/',
   });
 }
 
 function clearRefreshCookie(res) {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
   });
 }
