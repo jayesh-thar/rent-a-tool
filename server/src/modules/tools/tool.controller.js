@@ -55,13 +55,14 @@ async function create(req, res, next) {
 // Lists/browses tools with query filter parameters.
 async function list(req, res, next) {
   try {
-    const { category, ownershipType, status, search, available } = req.query;
+    const { category, ownershipType, status, search, available, ownerId } = req.query;
     const tools = await toolService.getTools({
       category,
       ownershipType,
       status,
       search,
       available,
+      ownerId,
     });
     res.json({ tools });
   } catch (error) {
@@ -120,9 +121,23 @@ async function update(req, res, next) {
   }
 }
 
+// DELETE /api/v1/tools/:id
+// Deletes tool. Restricts deletion to the owner and when no active/pending bookings exist.
+async function remove(req, res, next) {
+  try {
+    await toolService.deleteTool(req.params.id, req.user.userId);
+    res.json({
+      message: 'Tool deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   create,
   list,
   detail,
   update,
+  remove,
 };

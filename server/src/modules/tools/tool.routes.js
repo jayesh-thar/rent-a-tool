@@ -28,5 +28,6 @@ router.get('/:id', toolController.detail);
 // Protected endpoints
 router.post('/', authMiddleware, upload.single('image'), toolController.create);
 router.patch('/:id', authMiddleware, upload.single('image'), toolController.update);
+router.delete('/:id', authMiddleware, toolController.remove);
 
 module.exports = router;

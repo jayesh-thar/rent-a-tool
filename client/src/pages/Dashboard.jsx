@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShieldAlert, Wrench, ClipboardList, Handshake } from 'lucide-react';
+import { ShieldAlert, Wrench, ClipboardList, Handshake, Package } from 'lucide-react';
 import NotificationPanel from '../components/NotificationPanel';
 
 function Dashboard() {
@@ -110,7 +110,7 @@ function Dashboard() {
         </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Link to="/tools/add" onClick={handleAddToolClick} className="block group">
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs group-hover:shadow-md hover:border-slate-300 transition-all h-full">
               <div className="flex items-start justify-between mb-4">
@@ -121,6 +121,18 @@ function Dashboard() {
               </div>
               <h3 className="text-slate-900 font-bold mb-1">Add a Tool</h3>
               <p className="text-xs text-slate-500 leading-relaxed">List your tools for others to rent in the community.</p>
+            </div>
+          </Link>
+          <Link to="/tools/my" className="block group">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs group-hover:shadow-md hover:border-slate-300 transition-all h-full">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Package className="w-5 h-5 text-amber-600" />
+                </div>
+                <span className="text-[10px] font-bold text-amber-700 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 uppercase tracking-wider">Active</span>
+              </div>
+              <h3 className="text-slate-900 font-bold mb-1">My Listed Tools</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">Manage your listed tools, update their details, or delete listings.</p>
             </div>
           </Link>
           <Link to="/bookings/my" className="block group">

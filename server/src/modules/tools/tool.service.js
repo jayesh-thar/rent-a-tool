@@ -6,7 +6,7 @@ async function createTool(toolData) {
 }
 
 // Queries tools with filters and search.
-async function getTools({ category, ownershipType, status, search, available }) {
+async function getTools({ category, ownershipType, status, search, available, ownerId }) {
   const query = {};
 
   if (category) {
@@ -23,6 +23,10 @@ async function getTools({ category, ownershipType, status, search, available }) 
 
   if (available === 'true') {
     query.status = 'available';
+  }
+
+  if (ownerId) {
+    query.ownerId = ownerId;
   }
 
   if (search) {
@@ -77,9 +81,42 @@ async function updateTool(id, userId, updateData) {
   return await tool.save();
 }
 
+// Deletes a tool. Verifies ownership and checks for active/pending/approved bookings.
+async function deleteTool(id, userId) {
+  const tool = await Tool.findById(id);
+  if (!tool) {
+    const error = new Error('Tool not found');
+    error.status = 404;
+    throw error;
+  }
+
+  // Ensure owner checks match exactly (check string representations of IDs)
+  if (tool.ownerId.toString() !== userId.toString()) {
+    const error = new Error('Access denied — you do not own this tool');
+    error.status = 403;
+    throw error;
+  }
+
+  // Check if there are active, approved, or pending (requested) bookings
+  const Booking = require('../bookings/booking.model');
+  const activeBooking = await Booking.findOne({
+    toolId: id,
+    bookingStatus: { $in: ['requested', 'approved', 'active'] },
+  });
+
+  if (activeBooking) {
+    const error = new Error('Cannot delete tool with pending, approved, or active bookings');
+    error.status = 400;
+    throw error;
+  }
+
+  return await Tool.findByIdAndDelete(id);
+}
+
 module.exports = {
   createTool,
   getTools,
   getToolById,
   updateTool,
+  deleteTool,
 };

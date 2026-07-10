@@ -10,6 +10,7 @@ import BrowseTools from './pages/BrowseTools';
 import AddTool from './pages/AddTool';
 import ToolDetail from './pages/ToolDetail';
 import EditTool from './pages/EditTool';
+import MyTools from './pages/MyTools';
 import RequestBooking from './pages/RequestBooking';
 import MyBookings from './pages/MyBookings';
 import BookingRequests from './pages/BookingRequests';
@@ -52,6 +53,7 @@ function App() {
           {/* Tool Catalog Routes */}
           <Route path="/tools" element={<BrowseTools />} />
           <Route path="/tools/add" element={<ProtectedRoute><AddTool /></ProtectedRoute>} />
+          <Route path="/tools/my" element={<ProtectedRoute><MyTools /></ProtectedRoute>} />
           <Route path="/tools/:id" element={<ToolDetail />} />
           <Route path="/tools/:id/edit" element={<ProtectedRoute><EditTool /></ProtectedRoute>} />
           

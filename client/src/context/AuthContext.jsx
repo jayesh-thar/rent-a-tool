@@ -20,7 +20,11 @@ export function AuthProvider({ children }) {
     try {
       const res = await api.post('/auth/refresh');
       setAccessToken(res.data.accessToken);
-      setUser(res.data.user);
+      const userData = res.data.user;
+      if (userData && userData._id) {
+        userData.userId = userData._id;
+      }
+      setUser(userData);
       return res.data.accessToken;
     } catch {
       setAccessToken(null);
@@ -44,7 +48,11 @@ export function AuthProvider({ children }) {
       try {
         const res = await api.post('/auth/refresh');
         setAccessToken(res.data.accessToken);
-        setUser(res.data.user);
+        const userData = res.data.user;
+        if (userData && userData._id) {
+          userData.userId = userData._id;
+        }
+        setUser(userData);
       } catch {
         // No valid session — user needs to log in. This is expected, not an error.
       } finally {
@@ -57,14 +65,22 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     setAccessToken(res.data.accessToken);
-    setUser(res.data.user);
+    const userData = res.data.user;
+    if (userData && userData._id) {
+      userData.userId = userData._id;
+    }
+    setUser(userData);
     return res.data;
   }, []);
 
   const register = useCallback(async (fullName, email, password, phoneNumber, userType, communityDetails) => {
     const res = await api.post('/auth/register', { fullName, email, password, phoneNumber, userType, communityDetails });
     setAccessToken(res.data.accessToken);
-    setUser(res.data.user);
+    const userData = res.data.user;
+    if (userData && userData._id) {
+      userData.userId = userData._id;
+    }
+    setUser(userData);
     return res.data;
   }, []);
 
